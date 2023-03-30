@@ -11,7 +11,8 @@
     "@babel/core": "^7.21.3",
     "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.20.2",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "typescript": "^5.0.3"
   },
   "dependencies": {
     "apollo-server": "^3.12.0",
