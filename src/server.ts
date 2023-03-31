@@ -1,49 +1,59 @@
-import { ApolloServer, gql } from "apollo-server";
-import prismaClient from "./prisma";
+import { ApolloServer, gql } from 'apollo-server';
+import { randomUUID } from 'node:crypto';
 
-const users: string[] = [];
+/*
+ * Under fetching
+ * Rota HTTP que retorna dados de menos
+ * 
+ * Over fetching
+ * Rota HTTP que retorna mais dados do que precisamos
+*/
 
 const typeDefs = gql`
-  type Query {
-    hello: String
-
-  }
-
   type User {
-    email: String!
+    id: String!
     name: String!
-    password: String!
   }
-
   type Query {
     users: [User!]!
   }
+ type Mutation {
+    createUser(name: String!): User!
+ }
+`
 
+interface User {
+    id: string
+    name: string
+}
 
-  type Mutation {
-    createUser(name: String!, email: String!, password: String!): User!
-  }
-  `
+const users: User[] = [];
 
 const server = new ApolloServer({
     typeDefs,
     resolvers: {
         Query: {
-            hello: () => "Hello World"
+            users: () => {
+                return users
+            }
         },
 
         Mutation: {
-           createUser: (args) => {
-            prismaClient.createUser(args.name, args.email, args.password)
+            createUser: (_, args) => {
+                const user = {
 
-            return 
+                        id: randomUUID(),
+                        name: args.name,
+                };
 
-           }
+                users.push(user);
+
+                return user;
+            }
         }
     }
-
 })
 
 server.listen().then(({ url }) => {
-    console.log(`🚀 Server running on ${url}`)
-})
+    console.log(`🚀 HTTP server running on ${url}`);
+});
