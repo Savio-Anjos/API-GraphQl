@@ -17,6 +17,7 @@ const typeDefs = gql`
     email: String!
     password: String!
   }
+  
   type Query {
     users: [User!]!
   }
@@ -26,6 +27,9 @@ const typeDefs = gql`
 
     # Deletar usuário
     deleteUser(id: ID!): Boolean
+
+    # Atualizar usuário
+    updateUser(id: ID!, name: String!, email: String!, password: String!): User!
  }
 `
 
@@ -71,8 +75,23 @@ const server = new ApolloServer({
                 })
 
                 return !!deletedUser;
-            }
+            },
+
+            //Atualizar usuário
+            updateUser: (_, args) => {
+                const updatedUser = prismaClient.user.update({
+                    where: { id: args.id },
+                    data: {
+                        name: args.name,
+                        email: args.email,
+                        password: args.password
+                    }
+                
+            })
+
+            return updatedUser;
         }
+    }
     }
 })
 
