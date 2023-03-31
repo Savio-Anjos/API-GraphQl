@@ -5,8 +5,15 @@ const typeDefs = gql`
     hello: String
 
   }
+
+  type User {
+    email: String!
+    name: String!
+    password: String!
+  }
+
   type Mutation {
-    createUser(name: String!, email: String!, password: String)!
+    createUser(name: String!, email: String!, password: String!): User!
   }
   `
 
