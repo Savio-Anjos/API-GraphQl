@@ -1,5 +1,5 @@
 import { ApolloServer, gql } from 'apollo-server';
-import { randomUUID } from 'node:crypto';
+import prismaClient from './prisma';
 
 /*
  * Under fetching
@@ -11,20 +11,22 @@ import { randomUUID } from 'node:crypto';
 
 const typeDefs = gql`
   type User {
-    id: String!
     name: String!
+    email: String!
+    password: String!
   }
   type Query {
     users: [User!]!
   }
  type Mutation {
-    createUser(name: String!): User!
+    createUser(name: String!, email: String!, password: String!): User!
  }
 `
 
 interface User {
-    id: string
     name: string
+    email: string
+    password: string
 }
 
 const users: User[] = [];
@@ -40,13 +42,13 @@ const server = new ApolloServer({
 
         Mutation: {
             createUser: (_, args) => {
-                const user = {
-
-                        id: randomUUID(),
+                const user = prismaClient.user.create({
+                    data: {
                         name: args.name,
-                };
-
-                users.push(user);
+                        email: args.email,
+                        password: args.password
+                    }
+                })
 
                 return user;
             }
