@@ -11,6 +11,7 @@ import prismaClient from './prisma';
 
 const typeDefs = gql`
   type User {
+    id: ID!
     name: String!
     email: String!
     password: String!
@@ -19,11 +20,16 @@ const typeDefs = gql`
     users: [User!]!
   }
  type Mutation {
+    # Cadastrar usuário
     createUser(name: String!, email: String!, password: String!): User!
+
+    # Deletar usuário
+    deleteUserByEmail(email: String!): User!
  }
 `
 
 interface User {
+    id: string
     name: string
     email: string
     password: string
@@ -40,6 +46,8 @@ const server = new ApolloServer({
         },
 
         Mutation: {
+
+            //Criar usuário
             createUser: (_, args) => {
                 const user = prismaClient.user.create({
                     data: {
@@ -50,6 +58,17 @@ const server = new ApolloServer({
                 })
 
                 return user;
+            },
+
+            //Deletar usuário
+            deleteUserByEmail: (_, args) => {
+                const deletedUser = prismaClient.user.delete({
+                    where: {
+                        email: args.email
+                    }
+                })
+
+                return deletedUser;
             }
         }
     }
