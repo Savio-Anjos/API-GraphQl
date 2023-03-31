@@ -29,14 +29,13 @@ interface User {
     password: string
 }
 
-const users: User[] = [];
 
 const server = new ApolloServer({
     typeDefs,
     resolvers: {
         Query: {
             users: () => {
-                return users
+                return prismaClient.user.findMany()
             }
         },
 
