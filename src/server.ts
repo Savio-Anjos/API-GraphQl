@@ -1,4 +1,5 @@
 import { ApolloServer, gql } from 'apollo-server';
+import { randomUUID } from 'node:crypto';
 import prismaClient from './prisma';
 
 /*
@@ -24,7 +25,7 @@ const typeDefs = gql`
     createUser(name: String!, email: String!, password: String!): User!
 
     # Deletar usuário
-    deleteUserByEmail(email: String!): User!
+    deleteUser(id: ID!): Boolean
  }
 `
 
@@ -51,6 +52,7 @@ const server = new ApolloServer({
             createUser: (_, args) => {
                 const user = prismaClient.user.create({
                     data: {
+                        id: randomUUID(),
                         name: args.name,
                         email: args.email,
                         password: args.password
@@ -61,14 +63,14 @@ const server = new ApolloServer({
             },
 
             //Deletar usuário
-            deleteUserByEmail: (_, args) => {
-                const deletedUser = prismaClient.user.delete({
+            deleteUser: async (_, args) => {
+                const deletedUser = await prismaClient.user.delete({
                     where: {
-                        email: args.email
+                        id: args.id
                     }
                 })
 
-                return deletedUser;
+                return !!deletedUser;
             }
         }
     }
