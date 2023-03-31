@@ -1,4 +1,7 @@
 import { ApolloServer, gql } from "apollo-server";
+import prismaClient from "./prisma";
+
+const users: string[] = [];
 
 const typeDefs = gql`
   type Query {
@@ -11,6 +14,11 @@ const typeDefs = gql`
     name: String!
     password: String!
   }
+
+  type Query {
+    users: [User!]!
+  }
+
 
   type Mutation {
     createUser(name: String!, email: String!, password: String!): User!
@@ -25,7 +33,12 @@ const server = new ApolloServer({
         },
 
         Mutation: {
-           createUser: (args) => {}
+           createUser: (args) => {
+            prismaClient.createUser(args.name, args.email, args.password)
+
+            return 
+
+           }
         }
     }
 
