@@ -86,7 +86,7 @@ const server = new ApolloServer({
                         email: args.email,
                         password: args.password
                     }
-                
+                 
             })
 
             return updatedUser;
