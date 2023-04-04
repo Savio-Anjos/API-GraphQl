@@ -33,7 +33,13 @@ const typeDefs = gql`
     ): User!
 
     # Atualizar usuário
-    updateUser(id: ID!, name: String!, email: String!, password: String!): User!
+    updateUser(
+      id: ID!
+      name: String!
+      email: String!
+      password: String!
+      address: String!
+    ): User!
 
     # Deletar usuário
     deleteUser(id: ID!): Boolean
@@ -84,6 +90,7 @@ const server = new ApolloServer({
             name: args.name,
             email: args.email,
             password: args.password,
+            address: args.address,
           },
         });
 
