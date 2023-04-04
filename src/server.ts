@@ -16,6 +16,7 @@ const typeDefs = gql`
     name: String!
     email: String!
     password: String!
+    address: String!
   }
 
   type Query {
@@ -24,7 +25,12 @@ const typeDefs = gql`
   }
   type Mutation {
     # Cadastrar usuário
-    createUser(name: String!, email: String!, password: String!): User!
+    createUser(
+      name: String!
+      email: String!
+      password: String!
+      address: String!
+    ): User!
 
     # Atualizar usuário
     updateUser(id: ID!, name: String!, email: String!, password: String!): User!
@@ -52,6 +58,7 @@ const server = new ApolloServer({
             name: args.name,
             email: args.email,
             password: args.password,
+            address: args.address,
           },
         });
 
